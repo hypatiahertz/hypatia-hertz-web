@@ -171,11 +171,7 @@ a {
   position: relative;
   background-color: var(--color-bg);
   /* The artist banner image */
-  background-image: url('assets/images/banner.webp?v=2');
-  background-image: image-set(
-    url('assets/images/banner.webp?v=2') type('image/webp'),
-    url('assets/images/banner.jpg?v=2') type('image/jpeg')
-  );
+  background-image: url('assets/images/new-banner.jpg');
   background-size: cover;
   background-position: center top;
 }
@@ -187,7 +183,7 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(1, 3, 7, 0.2);
+  background: radial-gradient(circle at center, rgba(1, 3, 7, 0.15) 15%, rgba(1, 3, 7, 0.85) 90%);
   z-index: 0;
 }
 
@@ -1834,5 +1830,555 @@ section {
   .notify-submit {
     width: 100%;
     padding: 14px;
+  }
+}
+
+/* ============================================================
+   COMING SOON — FAIRYTALE PRE-RELEASE CARD
+   ============================================================ */
+
+.coming-soon-container {
+  max-width: 800px;
+  margin: 0 auto var(--space-3xl) auto;
+}
+
+.coming-soon-card {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: rgba(10, 15, 30, 0.6);
+  border: 1px solid rgba(129, 140, 248, 0.2);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 0 60px rgba(129, 140, 248, 0.08),
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.coming-soon-card:hover {
+  border-color: rgba(129, 140, 248, 0.4);
+  box-shadow:
+    0 0 80px rgba(129, 140, 248, 0.12),
+    0 24px 60px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Ambient glow behind the card */
+.coming-soon-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(ellipse at center,
+    rgba(129, 140, 248, 0.08) 0%,
+    rgba(56, 189, 248, 0.04) 40%,
+    transparent 70%);
+  filter: blur(60px);
+  animation: comingSoonPulse 5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes comingSoonPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.coming-soon-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xl);
+  padding: var(--space-2xl);
+}
+
+/* Cover art with cinematic glow */
+.coming-soon-art {
+  position: relative;
+  flex-shrink: 0;
+  width: 220px;
+}
+
+.coming-soon-cover {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  display: block;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  transition: transform 0.5s var(--ease-spring);
+}
+
+.coming-soon-card:hover .coming-soon-cover {
+  transform: scale(1.03);
+}
+
+.coming-soon-art-glow {
+  position: absolute;
+  bottom: -20px;
+  left: 10%;
+  right: 10%;
+  height: 60%;
+  background: radial-gradient(ellipse at center,
+    rgba(129, 140, 248, 0.25) 0%,
+    transparent 70%);
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+/* Text content */
+.coming-soon-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.coming-soon-label {
+  font-size: 0.8rem !important;
+  letter-spacing: 0.15em !important;
+  /* Override shimmer with a unique purple-cyan gradient */
+  background: linear-gradient(120deg,
+    #a78bfa 0%,
+    #38bdf8 40%,
+    #a78bfa 60%,
+    #e0e7ff 80%,
+    #a78bfa 100%) !important;
+  background-size: 300% 100% !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.coming-soon-title {
+  font-family: var(--font-formal);
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-xs);
+  color: var(--color-text-primary);
+  line-height: 1.1;
+}
+
+.coming-soon-artist {
+  font-family: var(--font-formal);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: var(--space-xs) !important;
+}
+
+.coming-soon-date {
+  font-family: var(--font-formal);
+  font-size: 0.9rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: var(--space-lg) !important;
+}
+
+/* Countdown Timer */
+.countdown {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 56px;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.countdown-number {
+  font-family: var(--font-formal);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown-label {
+  font-family: var(--font-formal);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+.countdown-separator {
+  font-family: var(--font-formal);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgba(129, 140, 248, 0.5);
+  animation: separatorBlink 1.5s ease-in-out infinite;
+  padding-bottom: 14px; /* align with numbers */
+}
+
+@keyframes separatorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Notify Me button inside Coming Soon */
+.coming-soon-content .btn-notify {
+  margin-top: 0;
+  border-color: rgba(129, 140, 248, 0.3);
+  color: #a78bfa;
+  background: rgba(129, 140, 248, 0.06);
+}
+
+.coming-soon-content .btn-notify:hover {
+  border-color: #a78bfa;
+  background: rgba(129, 140, 248, 0.15);
+  box-shadow: 0 0 20px rgba(129, 140, 248, 0.2);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .coming-soon-container {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .coming-soon-inner {
+    flex-direction: column;
+    text-align: center;
+    padding: var(--space-lg);
+    gap: var(--space-lg);
+  }
+
+  .coming-soon-art {
+    width: 65%;
+    max-width: 240px;
+  }
+
+  .coming-soon-title {
+    font-size: 2rem;
+  }
+
+  .countdown {
+    justify-content: center;
+  }
+
+  .countdown-unit {
+    min-width: 48px;
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .countdown-number {
+    font-size: 1.4rem;
+  }
+
+  .countdown-separator {
+    font-size: 1.2rem;
+    padding-bottom: 10px;
+  }
+
+  .coming-soon-content .btn-notify {
+    width: 100%;
+    max-width: 260px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 375px) {
+  .coming-soon-art {
+    width: 70%;
+    max-width: 200px;
+  }
+
+  .countdown-unit {
+    min-width: 42px;
+  }
+
+  .countdown-number {
+    font-size: 1.2rem;
+  }
+}
+
+/* ============================================================
+   NAV PERSISTENT MINI COUNTDOWN — Premium Aesthetic
+   ============================================================ */
+
+.nav-countdown {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 16px 7px 12px;
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.1), rgba(56, 189, 248, 0.06));
+  border: 1px solid rgba(129, 140, 248, 0.2);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: all 0.3s var(--ease-out-expo);
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-countdown::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(129, 140, 248, 0.08), transparent);
+  animation: navCdShimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes navCdShimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.nav-countdown:hover {
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.18), rgba(56, 189, 248, 0.1));
+  border-color: rgba(129, 140, 248, 0.45);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(129, 140, 248, 0.15);
+}
+
+/* Animated live dot */
+.nav-cd-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a78bfa;
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.6);
+  animation: liveDot 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes liveDot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(167, 139, 250, 0.6); }
+  50% { opacity: 0.4; box-shadow: 0 0 2px rgba(167, 139, 250, 0.3); }
+}
+
+.nav-cd-title {
+  font-family: var(--font-formal);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #c4b5fd;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.nav-cd-timer {
+  font-family: var(--font-formal);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* Mobile: countdown appears inside menu */
+@media (max-width: 768px) {
+  .nav-countdown {
+    margin-top: var(--space-sm);
+    align-self: flex-start;
+    padding: 10px 18px 10px 14px;
+  }
+
+  .nav-cd-title {
+    font-size: 0.75rem;
+  }
+
+  .nav-cd-timer {
+    font-size: 0.75rem;
+  }
+}
+
+/* ============================================================
+   RELEASE CAROUSEL — Stacked Translucent Cards
+   ============================================================ */
+
+.release-carousel-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  perspective: 1200px;
+}
+
+.release-carousel {
+  position: relative;
+  min-height: 360px;
+  transform-style: preserve-3d;
+}
+
+/* --- Stacked Card System (True 3D Depth) --- */
+.release-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* Behind card default state */
+  opacity: 0.3;
+  transform: translateZ(-150px) translateY(20px);
+  filter: blur(3px);
+  transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.release-slide.active {
+  position: relative;
+  opacity: 1;
+  transform: translateZ(0) translateY(0) rotate(0deg);
+  filter: blur(0);
+  pointer-events: auto;
+  z-index: 2;
+}
+
+/* Circular exit animations with 3D rotation */
+.release-slide.exit-left {
+  opacity: 0;
+  transform: translateX(-60%) translateZ(-100px) translateY(10px) rotateY(-15deg);
+  filter: blur(5px);
+  z-index: 3;
+}
+
+.release-slide.exit-right {
+  opacity: 0;
+  transform: translateX(60%) translateZ(-100px) translateY(10px) rotateY(15deg);
+  filter: blur(5px);
+  z-index: 3;
+}
+
+/* Make the behind card visible as a stacked preview */
+.release-slide.behind {
+  opacity: 0.2;
+  transform: translateZ(-120px) translateY(15px);
+  filter: blur(2px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Carousel Navigation */
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+}
+
+.carousel-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.35s var(--ease-out-expo);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-arrow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(129, 140, 248, 0.15), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-arrow:hover::before {
+  opacity: 1;
+}
+
+.carousel-arrow:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(129, 140, 248, 0.4);
+  color: var(--color-text-primary);
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(129, 140, 248, 0.12);
+}
+
+.carousel-arrow:active {
+  transform: scale(0.93);
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.4s var(--ease-out-expo);
+}
+
+.carousel-dot.active {
+  background: #a78bfa;
+  border-color: #a78bfa;
+  box-shadow: 0 0 12px rgba(129, 140, 248, 0.5);
+  width: 28px;
+  border-radius: 4px;
+}
+
+.carousel-dot:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 768px) {
+  .release-carousel {
+    min-height: 0;
+  }
+
+  .release-slide {
+    transform: translateZ(-100px) translateY(10px);
+  }
+
+  .release-slide.behind {
+    transform: translateZ(-80px) translateY(10px);
+    opacity: 0.2;
+  }
+
+  .release-slide.exit-left {
+    transform: translateX(-50%) translateZ(-60px) translateY(-10px) rotateY(-10deg);
+  }
+
+  .release-slide.exit-right {
+    transform: translateX(50%) translateZ(-60px) translateY(-10px) rotateY(10deg);
+  }
+
+  .carousel-nav {
+    margin-top: var(--space-lg);
+    gap: var(--space-lg);
+  }
+
+  .carousel-arrow {
+    width: 44px;
+    height: 44px;
   }
 }

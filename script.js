@@ -414,4 +414,135 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // --- Fairytale Countdown Timer ---
+  const cdDays = document.getElementById('cd-days');
+  const cdHours = document.getElementById('cd-hours');
+  const cdMinutes = document.getElementById('cd-minutes');
+  const cdSeconds = document.getElementById('cd-seconds');
+  const navCdTimer = document.getElementById('nav-cd-timer');
+  
+  if (cdDays && cdHours && cdMinutes && cdSeconds) {
+    // Release date: September 18, 2026 at midnight (Turkey time, UTC+3)
+    const releaseDate = new Date('2026-09-18T00:00:00+03:00').getTime();
+
+    const updateCountdown = () => {
+      const now = Date.now();
+      const distance = releaseDate - now;
+
+      if (distance <= 0) {
+        cdDays.textContent = '00';
+        cdHours.textContent = '00';
+        cdMinutes.textContent = '00';
+        cdSeconds.textContent = '00';
+        if (navCdTimer) navCdTimer.textContent = 'OUT NOW';
+        
+        const label = document.querySelector('.coming-soon-label');
+        if (label) {
+          label.textContent = label.dataset.en === 'COMING SOON' ? 'OUT NOW' : 'YAYINDA';
+          label.dataset.en = 'OUT NOW';
+          label.dataset.tr = 'YAYINDA';
+        }
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      cdDays.textContent = String(days).padStart(2, '0');
+      cdHours.textContent = String(hours).padStart(2, '0');
+      cdMinutes.textContent = String(minutes).padStart(2, '0');
+      cdSeconds.textContent = String(seconds).padStart(2, '0');
+
+      // Update nav mini countdown
+      if (navCdTimer) {
+        navCdTimer.textContent = `${days}d ${String(hours).padStart(2,'0')}h ${String(minutes).padStart(2,'0')}m`;
+      }
+    };
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  }
+
+  // --- Fairytale "Notify Me" button → opens the same subscription modal ---
+  const btnNotifyFairytale = document.getElementById('btn-notify-open-fairytale');
+  if (btnNotifyFairytale) {
+    btnNotifyFairytale.addEventListener('click', openModal);
+  }
+
+  // --- Release Carousel ---
+  const slides = document.querySelectorAll('.release-slide');
+  const dots = document.querySelectorAll('.carousel-dot');
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
+  let currentSlide = 0;
+  let isAnimating = false;
+
+  // Initial setup: make inactive slides "behind"
+  slides.forEach((slide, index) => {
+    if (index !== currentSlide) {
+      slide.classList.add('behind');
+    }
+  });
+
+  function goToSlide(index, direction) {
+    if (isAnimating || index === currentSlide || index < 0 || index >= slides.length) return;
+    isAnimating = true;
+    
+    const exitClass = direction === 'left' ? 'exit-left' : 'exit-right';
+    
+    const oldSlide = slides[currentSlide];
+    const newSlide = slides[index];
+    
+    // Old slide exits
+    oldSlide.classList.remove('active');
+    oldSlide.classList.add(exitClass);
+    
+    // New slide enters (remove behind, add active)
+    newSlide.classList.remove('behind', 'exit-left', 'exit-right');
+    newSlide.classList.add('active');
+    
+    // Update dots
+    dots.forEach(d => d.classList.remove('active'));
+    if (dots[index]) dots[index].classList.add('active');
+    
+    // Clean up classes after transition (600ms matching CSS transition)
+    setTimeout(() => {
+      oldSlide.classList.remove(exitClass);
+      oldSlide.classList.add('behind');
+      isAnimating = false;
+    }, 600);
+    
+    currentSlide = index;
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      const target = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
+      goToSlide(target, 'right');
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const target = currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
+      goToSlide(target, 'left');
+    });
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const target = parseInt(dot.dataset.dot);
+      const direction = target > currentSlide ? 'left' : 'right';
+      goToSlide(target, direction);
+    });
+  });
+
+  // --- Dynamic Copyright Year ---
+  const copyrightYear = document.getElementById('copyright-year');
+  if (copyrightYear) {
+    copyrightYear.textContent = new Date().getFullYear();
+  }
+
 });
