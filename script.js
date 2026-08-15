@@ -34,6 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
     mobileToggle.addEventListener('click', () => {
       mobileToggle.classList.toggle('is-active');
       navElement.classList.toggle('menu-open');
+      const isExpanded = mobileToggle.classList.contains('is-active');
+      mobileToggle.setAttribute('aria-expanded', isExpanded);
     });
   }
 
@@ -50,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mobileToggle && navElement) {
           mobileToggle.classList.remove('is-active');
           navElement.classList.remove('menu-open');
+          mobileToggle.setAttribute('aria-expanded', 'false');
         }
         return;
       }
@@ -59,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mobileToggle && navElement) {
           mobileToggle.classList.remove('is-active');
           navElement.classList.remove('menu-open');
+          mobileToggle.setAttribute('aria-expanded', 'false');
         }
         const offset = 40; // Controls how far below the navbar the section lands (smaller = higher up)
         const bodyRect = document.body.getBoundingClientRect().top;
@@ -402,6 +406,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
           notifyForm.style.display = 'none';
           notifySuccess.style.display = 'block';
+          // Auto-close modal after 3 seconds
+          setTimeout(() => {
+            if (notifyModal.classList.contains('active')) closeModal();
+          }, 3000);
         } else {
           throw new Error('Submission failed');
         }
@@ -457,7 +465,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Update nav mini countdown
       if (navCdTimer) {
-        navCdTimer.textContent = `${days}d ${String(hours).padStart(2,'0')}h ${String(minutes).padStart(2,'0')}m`;
+        const currentLang = document.querySelector('.lang-switcher .active')?.textContent?.trim().toLowerCase() === 'tr' ? 'tr' : 'en';
+        const dStr = currentLang === 'tr' ? 'g' : 'd';
+        const hStr = currentLang === 'tr' ? 's' : 'h';
+        const mStr = currentLang === 'tr' ? 'd' : 'm';
+        navCdTimer.textContent = `${days}${dStr} ${String(hours).padStart(2,'0')}${hStr} ${String(minutes).padStart(2,'0')}${mStr}`;
       }
     };
 
