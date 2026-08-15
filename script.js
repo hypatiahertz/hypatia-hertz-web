@@ -551,6 +551,103 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // --- Touch Swipe & Mouse Drag Support for Carousel ---
+  const carouselEl = document.getElementById('release-carousel');
+  if (carouselEl && slides.length > 1) {
+    let startX = 0;
+    let startY = 0;
+    let isDragging = false;
+    let isHorizontalSwipe = null; // null = undetermined, true/false once decided
+    const SWIPE_THRESHOLD = 40; // minimum px to trigger slide change
+    const DIRECTION_LOCK_THRESHOLD = 10; // px to decide swipe direction
+
+    // --- Touch Events (Mobile) ---
+    carouselEl.addEventListener('touchstart', (e) => {
+      if (isAnimating) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      isDragging = true;
+      isHorizontalSwipe = null;
+      carouselEl.classList.add('is-dragging');
+    }, { passive: true });
+
+    carouselEl.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const diffX = Math.abs(currentX - startX);
+      const diffY = Math.abs(currentY - startY);
+
+      // Decide direction once we've moved enough
+      if (isHorizontalSwipe === null && (diffX > DIRECTION_LOCK_THRESHOLD || diffY > DIRECTION_LOCK_THRESHOLD)) {
+        isHorizontalSwipe = diffX > diffY;
+      }
+
+      // If horizontal swipe detected, prevent vertical scroll
+      if (isHorizontalSwipe) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    carouselEl.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      carouselEl.classList.remove('is-dragging');
+
+      const endX = e.changedTouches[0].clientX;
+      const diffX = endX - startX;
+
+      if (isHorizontalSwipe && Math.abs(diffX) > SWIPE_THRESHOLD) {
+        if (diffX < 0) {
+          // Swiped left → next slide
+          const target = currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
+          goToSlide(target, 'left');
+        } else {
+          // Swiped right → previous slide
+          const target = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
+          goToSlide(target, 'right');
+        }
+      }
+      isHorizontalSwipe = null;
+    }, { passive: true });
+
+    // --- Mouse Drag Events (Desktop) ---
+    carouselEl.addEventListener('mousedown', (e) => {
+      if (isAnimating) return;
+      // Don't interfere with button/link clicks
+      if (e.target.closest('a, button')) return;
+      e.preventDefault();
+      startX = e.clientX;
+      isDragging = true;
+      carouselEl.classList.add('is-dragging');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      // Optional: could add visual drag feedback here
+    });
+
+    document.addEventListener('mouseup', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      carouselEl.classList.remove('is-dragging');
+
+      const diffX = e.clientX - startX;
+      if (Math.abs(diffX) > SWIPE_THRESHOLD) {
+        if (diffX < 0) {
+          const target = currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
+          goToSlide(target, 'left');
+        } else {
+          const target = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
+          goToSlide(target, 'right');
+        }
+      }
+    });
+
+    // Prevent drag ghost images on links/images inside the carousel
+    carouselEl.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+
   // --- Dynamic Copyright Year ---
   const copyrightYear = document.getElementById('copyright-year');
   if (copyrightYear) {
